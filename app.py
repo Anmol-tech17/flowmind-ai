@@ -451,6 +451,21 @@ def page_dashboard():
             for item in radar_items[:8]:
                 st.markdown(f'<div class="risk-item">{item}</div>', unsafe_allow_html=True)
 
+    # ── Quick Action Buttons ──────────────────────────────────────────────────
+    st.markdown("<br><hr style='border:1px solid #1e2a3a;margin-top:20px;margin-bottom:20px;'>", unsafe_allow_html=True)
+    btn_left, _, btn_right = st.columns([1, 4, 1])
+    
+    with btn_left:
+        if st.button("🤖 AI Assistant", use_container_width=True):
+            st.session_state.page = "AI Assistant"
+            st.rerun()
+            
+    with btn_right:
+        if st.button("＋ Add Task", use_container_width=True):
+            st.session_state.page = "Task Board"
+            st.rerun()
+
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PAGE: AI ASSISTANT

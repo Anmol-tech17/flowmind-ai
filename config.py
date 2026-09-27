@@ -9,7 +9,13 @@ load_dotenv()
 
 # ─── Gemini ───────────────────────────────────────────────────────────────────
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = "gemini-2.0-flash"
+if not GEMINI_API_KEY:
+    try:
+        import streamlit as st
+        GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", "")
+    except Exception:
+        pass
+GEMINI_MODEL = "gemini-3.8-flash"
 
 # ─── Database ─────────────────────────────────────────────────────────────────
 DB_PATH = os.path.join("data", "flowmind.db")
