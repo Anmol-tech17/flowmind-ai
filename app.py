@@ -263,10 +263,15 @@ with st.sidebar:
     page = st.radio(
         "Navigate",
         ["Dashboard", "AI Assistant", "Task Board", "Team"],
-        index=["Dashboard", "AI Assistant", "Task Board", "Team"].index(st.session_state.page),
+        index=["Dashboard", "AI Assistant", "Task Board", "Team"].index(
+            st.session_state.page
+        ),
         label_visibility="collapsed",
+        key="sidebar_navigation",
     )
-    st.session_state.page = page
+
+    if page != st.session_state.page:
+        st.session_state.page = page
 
     st.markdown("---")
     ai_status = "🟢 AI Online" if ai.is_ai_available() else "🔴 AI Offline"
@@ -456,12 +461,12 @@ def page_dashboard():
     btn_left, _, btn_right = st.columns([1, 4, 1])
     
     with btn_left:
-        if st.button("🤖 AI Assistant", use_container_width=True):
+        if st.button("🤖 AI Assistant", use_container_width=True, key="dashboard_ai"):
             st.session_state.page = "AI Assistant"
             st.rerun()
-            
+
     with btn_right:
-        if st.button("＋ Add Task", use_container_width=True):
+        if st.button("＋ Add Task", use_container_width=True, key="dashboard_add"):
             st.session_state.page = "Task Board"
             st.rerun()
 

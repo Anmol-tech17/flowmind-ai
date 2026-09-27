@@ -15,7 +15,7 @@ if not GEMINI_API_KEY:
         GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", "")
     except Exception:
         pass
-GEMINI_MODEL = "gemini-3.8-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 
 # ─── Database ─────────────────────────────────────────────────────────────────
 DB_PATH = os.path.join("data", "flowmind.db")
