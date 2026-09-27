@@ -2,6 +2,7 @@
 FlowMind AI — AI Engine
 Gemini integration: intent classification, task extraction, NL responses.
 All DB operations are executed by Python — Gemini only returns structured JSON.
+Uses the new google-genai SDK (google.genai).
 """
 
 import json
@@ -9,19 +10,17 @@ import re
 from datetime import datetime, timedelta
 from typing import Any
 
-import google.generativeai as genai
-
 from config import GEMINI_API_KEY, GEMINI_MODEL
 
 # ─── Initialise Gemini ────────────────────────────────────────────────────────
 
 _gemini_available = False
-_model = None
+_client = None
 
 if GEMINI_API_KEY:
     try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        _model = genai.GenerativeModel(GEMINI_MODEL)
+        from google import genai
+        _client = genai.Client(api_key=GEMINI_API_KEY)
         _gemini_available = True
     except Exception as e:
         print(f"[AI Engine] Gemini init failed: {e}")
@@ -117,10 +116,13 @@ def _extract_json(text: str) -> Any:
 
 
 def _call_gemini(prompt: str) -> str:
-    """Raw Gemini call with error handling."""
-    if not _gemini_available or _model is None:
+    """Raw Gemini call with error handling using new google.genai SDK."""
+    if not _gemini_available or _client is None:
         raise RuntimeError("Gemini is not available.")
-    response = _model.generate_content(prompt)
+    response = _client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=prompt,
+    )
     return response.text
 
 
