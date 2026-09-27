@@ -241,6 +241,11 @@ db.init_db()
 
 # ─── Session State ────────────────────────────────────────────────────────────
 
+# Handle navigation requests from dashboard buttons
+if "navigation_target" in st.session_state:
+    st.session_state.page = st.session_state.navigation_target
+    st.session_state.sidebar_navigation = st.session_state.navigation_target
+    del st.session_state.navigation_target
 if "chat_history"         not in st.session_state: st.session_state.chat_history = []
 if "pending_tasks"        not in st.session_state: st.session_state.pending_tasks = []
 if "show_task_preview"    not in st.session_state: st.session_state.show_task_preview = False
@@ -261,17 +266,13 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     page = st.radio(
-        "Navigate",
-        ["Dashboard", "AI Assistant", "Task Board", "Team"],
-        index=["Dashboard", "AI Assistant", "Task Board", "Team"].index(
-            st.session_state.page
-        ),
-        label_visibility="collapsed",
-        key="sidebar_navigation",
-    )
+    "Navigate",
+    ["Dashboard", "AI Assistant", "Task Board", "Team"],
+    label_visibility="collapsed",
+    key="sidebar_navigation",
+)
 
-    if page != st.session_state.page:
-        st.session_state.page = page
+    st.session_state.page = page
 
     st.markdown("---")
     ai_status = "🟢 AI Online" if ai.is_ai_available() else "🔴 AI Offline"
@@ -462,12 +463,12 @@ def page_dashboard():
     
     with btn_left:
         if st.button("🤖 AI Assistant", use_container_width=True, key="dashboard_ai"):
-            st.session_state.page = "AI Assistant"
+            st.session_state.navigation_target = "AI Assistant"
             st.rerun()
 
     with btn_right:
         if st.button("＋ Add Task", use_container_width=True, key="dashboard_add"):
-            st.session_state.page = "Task Board"
+            st.session_state.navigation_target = "Task Board"
             st.rerun()
 
 
